@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('sinopse');
-            $table->foreignId('gender_id')->constrained('genders')->onDelete('cascade');
+            $table->foreignId('gender_id')->constrained('genders')->onDelete('set null');
             $table->foreignId('author_id')->constrained('authors')->onDelete('cascade');
             $table->timestamps();
         });

@@ -2,83 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ClientService;
-use App\Http\Requests\ClientStoreRequest;
-use App\Http\Requests\ClientUpdateRequest;
-use App\Http\Resources\ClientResource;
+use App\Services\BookService;
+use App\Http\Requests\BookStoreRequest;
+use App\Http\Requests\BookUpdateRequest;
+use App\Http\Resources\BookResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ClientController extends Controller
+class BookController extends Controller
 {
-    private ClientService $clientService;
+    private BookService $bookService;
 
-    public function __construct(ClientService $clientService)
+    public function __construct(BookService $bookService)
     {
-        $this->clientService = $clientService;
+        $this->bookService = $bookService;
     }
 
     public function get()
     {
-        $clients = $this->clientService->get();
-        return ClientResource::collection($clients);
+        $books = $this->bookService->get();
+        return BookResource::collection($books);
     }
 
     public function details(int $id)
     {
         try {
-            $client = $this->clientService->details($id);
+            $book = $this->bookService->details($id);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Client not found'], 404);
+            return response()->json(['error' => 'Book not found'], 404);
         }
 
-        return new ClientResource($client);
+        return new BookResource($book);
     }
 
-    public function store(ClientStoreRequest $request)
+    public function store(BookStoreRequest $request)
     {
         $data = $request->validated();
 
-        $client = $this->clientService->store($data);
+        $book = $this->bookService->store($data);
 
-        return new ClientResource($client);
+        return new BookResource($book);
     }
 
-    public function update(int $id, ClientUpdateRequest $request)
+    public function update(int $id, BookUpdateRequest $request)
     {
         $data = $request->validated();
 
         try {
-            $client = $this->clientService->update($id, $data);
+            $book = $this->bookService->update($id, $data);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Client not found'], 404);
+            return response()->json(['error' => 'Book not found'], 404);
         }
 
-        return new ClientResource($client);
+        return new BookResource($book);
     }
 
     public function delete(int $id)
     {
         try {
-            $client = $this->clientService->delete($id);
+            $this->bookService->delete($id);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Client not found'], 404);
+            return response()->json(['error' => 'Book not found'], 404);
         }
 
-        return response()->json(['message' => 'Client deleted successfully']);
+        return response()->json(['message' => 'Book deleted successfully']);
     }
 
     public function getWithReviews()
     {
-        $clients = $this->clientService->getWithReviews();
-        return ClientResource::collection($clients);
+        $books = $this->bookService->getWithReviews();
+        return BookResource::collection($books);
     }
 
     public function findReviews(int $id)
     {
         try {
-            $reviews = $this->clientService->findReviews($id);
+            $reviews = $this->bookService->findReviews($id);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Client not found'], 404);
+            return response()->json(['error' => 'Book not found'], 404);
         }
 
         return response()->json($reviews);
